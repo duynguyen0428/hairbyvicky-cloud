@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mongo_server:
+    container_name: mongo_server
+    image: mongo
+    ports:
+      - "27017:27017"
+  booking_service:
+    restart: always
+    container_name: booking_service
+    build:
+      context: ./services/booking.api
+      dockerfile: Dockerfile
+    # volumes:
+    #   - .:./services/booking_api  
+    depends_on:
+      - mongo_server
+    links:
+      - mongo_server
+    ports:
+      - "3000:3000"
+
