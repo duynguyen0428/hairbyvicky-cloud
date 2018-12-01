@@ -3,6 +3,8 @@ services:
   mongo_server:
     container_name: mongo_server
     image: mongo
+    volumes:
+      - /Users/duynguyen/data/db:/data/db
     ports:
       - "27017:27017"
   booking_service:
@@ -12,7 +14,7 @@ services:
       context: ./services/booking.api
       dockerfile: Dockerfile
     # volumes:
-    #   - .:./services/booking_api  
+    #   - ./services/booking.api:/usr/booking_app
     depends_on:
       - mongo_server
     links:
