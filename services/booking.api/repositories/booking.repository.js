@@ -36,9 +36,11 @@ const model = require('../model/booking').Booking;
 // }
 // module.exports = BookingRepository;
 
-module.exports.getAllBooking = async function () {
+module.exports.getAllBooking = async () => {
     try {
-        var bookings = await model.find({}, { sort: { Created: -1 }}).exec();
+        console.info(`get to repo`);
+        var bookings = await model.find({}).exec();
+        console.info(`bookings: ${bookings}`);
         if (bookings != null)
             return bookings;
     } catch (error) {
@@ -47,7 +49,7 @@ module.exports.getAllBooking = async function () {
 
 };
 
-module.exports.getBooking = async function (query) {
+module.exports.getBooking = async (query) => {
     try {
 
         var _query = JSON.stringify(query);
@@ -65,7 +67,7 @@ module.exports.getBooking = async function (query) {
 
 };
 
-module.exports.createBooking = async function (bk_dt,name,email,mobile_no,description) {
+module.exports.createBooking = async (bk_dt,name,email,mobile_no,description) => {
     try {
         var save_entity = await model.create({
             Name: name,
@@ -81,7 +83,7 @@ module.exports.createBooking = async function (bk_dt,name,email,mobile_no,descri
     }
 };
 
-module.exports.createBookingV2 = async function (entity) {
+module.exports.createBookingV2 = async (entity) => {
     try {
         var save_entity = await model.create(entity);
         console.info(`repository save entity ${entity}`);
@@ -107,4 +109,28 @@ module.exports.deleteBooking = async function (query) {
         console.error(`error:  ${error}`);
     }
 
-}
+};
+
+module.exports.updateBooking = async (query,content) => {
+    try {
+        // var entity = await model.where(query);
+        // console.debug(`found entity: ${typeof(entity)}`);
+        // if(entity)
+        //     throw new Error(`can't find entity`);            
+        // var save_entity = await entity.update(content);
+        // if(save_entity <= 0)
+        //     throw new Error(`can't update booking`);
+        var save_entity = await model.where(query).update(content);
+        console.debug(`save_entity: ${save_entity}`);
+        Object.keys(save_entity).forEach((key) => {
+            console.debug(`save_entity key ${key} and value ${save_entity[key]} - type ${typeof(save_entity[key])} `);
+        } );
+        if(save_entity.nModified <= 0)
+            throw new Error(`can't update booking`);
+    } catch (error) {
+        console.error(`error: ${error}`);
+        throw new Error(`system error`);
+    }
+
+
+};

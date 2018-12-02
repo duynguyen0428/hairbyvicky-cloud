@@ -7,13 +7,19 @@ services:
       - /Users/duynguyen/data/db:/data/db
     ports:
       - "27017:27017"
+    # healthcheck:
+    #   test: ["CMD", "docker-healthcheck"]
+    #   interval: 30s
+    #   timeout: s
+    #   retries: 3
   booking_service:
-    restart: always
+    restart: on-failure
     container_name: booking_service
     build:
       context: ./services/booking.api
       dockerfile: Dockerfile
     # volumes:
+    #   - /app/node_modules
     #   - ./services/booking.api:/usr/booking_app
     depends_on:
       - mongo_server
@@ -21,4 +27,15 @@ services:
       - mongo_server
     ports:
       - "3000:3000"
+  routing_service:
+    restart: always
+    build:
+      context: ./services/routing_service
+      dockerfile: Dockerfile
+    ports:
+      - '3050:80'
+    depends_on:
+      - mongo_server
+      - booking_service
+
 

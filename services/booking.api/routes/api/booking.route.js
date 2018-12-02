@@ -55,7 +55,6 @@ Router.get('/',async (req,res)=>{
             _id: req.body.id
         }
         console.info(`email: ${query._id}`);
-
         var del = await bookingRepo.deleteBooking(query);
         if (!del)
             return res.send(del);
@@ -65,10 +64,7 @@ Router.get('/',async (req,res)=>{
     .post('/',async(req,res)=>{
         var entity = req.body;
         Object.keys(entity).forEach(key => console.info(`entity key: ${key} | entity value ${entity[key]}`))
-        var save_result = await bookingRepo.
-            createBookingV2(entity);
-        if(save_result != null)
-            res.status(500).send();
+        var save_result = await bookingRepo.createBookingV2(entity);
         res.status(201).send();
     });
 
